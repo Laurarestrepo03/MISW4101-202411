@@ -1,0 +1,27 @@
+name: Testing en Develop
+on:
+  push:
+    branches: [ develop ]
+jobs:
+  job1:
+    name: Pruebas en Develop
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout de repositorio
+      uses: actions/checkout@v2
+    - name: Configuración de entorno de python
+      uses: actions/setup-python@v2
+      with:
+          python-version: '3.7'
+    - name: Instalación de librerías y dependencias
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+    - name: Correr pruebas
+      id: correr-pruebas
+      run: python -m unittest discover -s tests
+    - name: Cálculo de cubrimiento
+      id: cubrimiento
+      run: |
+          coverage run -m unittest discover -s tests -v
+          coverage report -m
